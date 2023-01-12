@@ -27,6 +27,8 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import com.zxcpoiu.incallmanager.AppRTC.AppRTCUtils;
 import com.zxcpoiu.incallmanager.AppRTC.ThreadUtils;
 import com.zxcpoiu.incallmanager.InCallManagerModule;
@@ -234,7 +236,9 @@ public class AppRTCBluetoothManager {
     bluetoothDevice = null;
     scoConnectionAttempts = 0;
     // Get a handle to the default local Bluetooth adapter.
-    bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    // bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    BluetoothManager manager=(BluetoothManager)apprtcContext.getSystemService(Context.BLUETOOTH_SERVICE);
+    bluetoothAdapter = manager.getAdapter();
     if (bluetoothAdapter == null) {
       Log.w(TAG, "Device does not support Bluetooth");
       return;
@@ -386,7 +390,12 @@ public class AppRTCBluetoothManager {
     apprtcContext.registerReceiver(receiver, filter);
   }
   protected void unregisterReceiver(BroadcastReceiver receiver) {
-    apprtcContext.unregisterReceiver(receiver);
+    // apprtcContext.unregisterReceiver(receiver);
+    try {
+      apprtcContext.unregisterReceiver(receiver);
+    }catch (Exception e){
+      Log.d(TAG, " unregisterReceiver err  " + e);
+    }
   }
   protected boolean getBluetoothProfileProxy(
       Context context, BluetoothProfile.ServiceListener listener, int profile) {
