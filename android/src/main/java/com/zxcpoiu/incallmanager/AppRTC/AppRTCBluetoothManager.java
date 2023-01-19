@@ -237,8 +237,12 @@ public class AppRTCBluetoothManager {
     scoConnectionAttempts = 0;
     // Get a handle to the default local Bluetooth adapter.
     // bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    BluetoothManager manager=(BluetoothManager)apprtcContext.getSystemService(Context.BLUETOOTH_SERVICE);
-    bluetoothAdapter = manager.getAdapter();
+    if(Build.VERSION.SDK_INT >= 31) {
+     BluetoothManager manager=(BluetoothManager)apprtcContext.getSystemService(Context.BLUETOOTH_SERVICE);
+     bluetoothAdapter = manager.getAdapter();
+    }else{
+      bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    }
     if (bluetoothAdapter == null) {
       Log.w(TAG, "Device does not support Bluetooth");
       return;
